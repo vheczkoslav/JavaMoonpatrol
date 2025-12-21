@@ -1,0 +1,41 @@
+    Points are fairly straightforward. You get more points for shooting 
+something than for jumping over it. Now that we've defined the entities 
+we can show the points you get for taking them out.
+
+--100 points for claws or saucers
+--200 points for triads
+--no points for any missiles flying enemies shoot at you
+--500 point bonus for wiping out a group of 3 flying enemies
+--800 points for a group of 4
+--1000 for a group of 5. Note they must all appear at the same time and 
+be of the same sort; 2 claws + 2 saucers just after are as tough as 4 
+claws, but you don't get the bonus for them.
+
+--no combos for jumping over 2 items although you do get points for both 
+of them
+--50 points for shooting a barrel(any size) rolling down a hill
+--100 points for jumping over the barrel
+
+--50 points for jumping over a small rock
+--80 points for jumping over a regular rock
+--100 points for jumping over a 2-part rock although if you shoot the 
+half that doesn't look like a rock you get 80; shoot the half that does 
+and jump, you get 20.
+--100 points for shooting a rock, any size; big 2-part rocks get 200
+--50 points for jumping over a small pit
+--100 points for jumping over a small pit
+
+--100 points for jumping over a tank
+--200 points for shooting a tank
+--no points for shooting the tank's missile
+
+--500/800/1000 points for the car that sneaks up behind you, depending 
+on how far away it is from you(farther=less points) but no points for 
+jumping it
+--300/500/800 points for shooting the poppers, 100 for jumping them
+
+--5000 points for completing beginner course
+--10000 points for completing champion course
+--conditional points for completing a course segment are listed in the 
+walkthrough below.
+Source: https://gamefaqs.gamespot.com/arcade/584165-moon-patrol/faqs/19390
