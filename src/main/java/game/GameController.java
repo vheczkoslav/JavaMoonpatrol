@@ -7,11 +7,24 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 public class GameController {
     private DrawingThread timer;
     private Track track;
     private Score s;
+
+    @FXML
+    private Text highScoreText;
+
+    @FXML
+    private Text scoreText;
+
+    /*@FXML
+    private Text timeText;
+
+    @FXML
+    private Text livesText;*/
 
     @FXML
     private BorderPane root;
@@ -55,7 +68,10 @@ public class GameController {
 
         assert canvas != null : "fx:id=\"canvas\" was not injected: check your FXML file 'gameWindow.fxml'.";
 
-        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+        assert scoreText != null : "fx:id=\"scoreText\" was not injected: check your FXML file 'gameWindow.fxml'.";
+        assert highScoreText != null : "fx:id=\"highScoreText\" was not injected: check your FXML file 'gameWindow.fxml'.";
+
+        /*root.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obs2, oldWin, newWin) -> {
                     if (newWin != null) {
@@ -63,27 +79,34 @@ public class GameController {
                     }
                 });
             }
-        });
+        });*/
 
-        track = new Track(canvas.getWidth(), canvas.getHeight());
+        s = FileManager.load();
+
+        if(s == null){
+            s = new Score();
+        }
+        else{
+            scoreText.setText("Score: " + String.valueOf(s.currentScore));
+            highScoreText.setText("High score: " + String.valueOf(s.highScore));
+        }
+
+        track = new Track(canvas.getWidth(), canvas.getHeight(), s, this);
         timer = new DrawingThread(canvas, track);
         timer.start();
 
         Platform.runLater(() -> canvas.requestFocus());
-
-        try {
-            s = FileManager.load();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    public Score getS() {
+    public Score getScore() {
         return s;
+    }
+
+    public void setScoreText(){
+        scoreText.setText(String.valueOf(s.currentScore));
     }
 
     public void stop() throws Exception {
         timer.stop();
     }
-
 }

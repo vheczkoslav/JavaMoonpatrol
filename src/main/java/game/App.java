@@ -36,22 +36,14 @@ public class App extends Application {
             primaryStage.setTitle("Java 1 - 6th laboratory");
             primaryStage.show();
             //Exit program when main window is closed
-            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent windowEvent) {
-                    Platform.exit();
-                    try {
-                        if(FileManager.save(gameController.getS())){
-                            System.out.println("Score data succesfully saved");
-                        }
-                        else{
-                            System.out.println("Score data wasn't succesfully saved");
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    System.exit(0);
+            primaryStage.setOnCloseRequest(e -> {
+                if (!FileManager.save(gameController.getScore())) {
+                    System.out.println("Score data wasn't successfully saved");
+                } else {
+                    System.out.println("Score data successfully saved");
                 }
+                Platform.exit();
+                System.exit(0);
             });
         } catch (Exception e) {
             e.printStackTrace();

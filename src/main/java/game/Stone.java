@@ -23,8 +23,8 @@ public class Stone implements Collisionable{
     public void draw(GraphicsContext gc){
         gc.drawImage(i, pos.getX(), pos.getY());
     }
-    public void move(){
-        pos = new Point2D(pos.getX() - 5, pos.getY());
+    public void move(double deltaTime){
+        pos = new Point2D(pos.getX() - 250 * deltaTime, pos.getY());
     }
     public boolean isOutOfBounds(){
         return (pos.getX() < -i.getWidth());

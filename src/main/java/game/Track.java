@@ -12,16 +12,19 @@ public class Track {
     private Ship s;
 
     private static final int GROUND_HEIGHT = 48;
+    private Score score;
 
     private FlyingEnemyGenerator feg;
     private ProjectileManager projectileManager;
 
-    private Comparator<RenderEntity> comparator;
-
     private final List<RenderEntity> r = new ArrayList<>();
     private final List<Collisionable> collisionables = new ArrayList<>();
 
-    public Track(double width, double height) {
+    private GameController gameController;
+
+    public Track(double width, double height, Score score, GameController gameController) {
+        this.score = score;
+
         size = new Dimension2D(width, height);
         g = new Ground(this, GROUND_HEIGHT);
         s = new Ship(this, GROUND_HEIGHT);
@@ -32,6 +35,8 @@ public class Track {
         feg = new FlyingEnemyGenerator(this);
         projectileManager = new ProjectileManager(GROUND_HEIGHT, this);
         collisionables.add(s);
+
+        this.gameController = gameController;
     }
 
     public void draw(GraphicsContext gc) {
@@ -42,29 +47,38 @@ public class Track {
 //        }
         r.forEach(e -> e.draw(gc));
         g.draw(gc);
+        feg.draw(gc);
         projectileManager.draw(gc);
     }
 
     public void simulate(double deltaTime) {
-        for(Collisionable c1 : collisionables){
-            for(Collisionable c2 : collisionables){
-                if(c1 != c2 && c1.getBoundingBox().intersects(c2.getBoundingBox())){
-                    if(c1 instanceof Ship && c2 instanceof Stone){
-
+        for (Collisionable c1 : collisionables) {
+            for (Collisionable c2 : collisionables) {
+                if (c1 != c2 && c1.getBoundingBox().intersects(c2.getBoundingBox())) {
+                    if (c1 instanceof Ship && c2 instanceof Stone) {
+                        System.exit(-1);
                     }
-                    if(c1 instanceof HorizontalProjectile && c2 instanceof Stone){
-
+                    if (c1 instanceof HorizontalProjectile && c2 instanceof Stone) {
+                        score.increaseScore(50);
+                        collisionables.remove(c2);
+                        gameController.setScoreText();
+                    }
+                    if(c1 instanceof VerticalProjectile && c2 instanceof FlyingEnemy){
+                        score.increaseScore(100);
+                        collisionables.remove(c2);
+                        gameController.setScoreText();
                     }
                 }
             }
         }
-        g.simulate();
+
+        g.simulate(deltaTime);
 //        for(Renderable renderable : r){
 //            renderable.simulate(deltaTime);
 //        }
         r.forEach(e -> e.simulate(deltaTime));
         s.move();
-        feg.simulate();
+        feg.simulate(deltaTime);
         projectileManager.simulate();
     }
 
