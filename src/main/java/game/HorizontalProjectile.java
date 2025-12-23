@@ -17,7 +17,7 @@ public class HorizontalProjectile extends Projectile{
     }
 
     @Override
-    public void move() {
+    public void simulate(double deltaTime) {
         pos = new Point2D(pos.getX() + speed, pos.getY());
     }
 

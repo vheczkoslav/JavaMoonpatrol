@@ -7,15 +7,14 @@ import javafx.scene.image.Image;
 
 import java.awt.*;
 
-public class FlyingEnemy extends RenderEntity implements Collisionable {
+public class FlyingEnemy extends Collisionable {
     final int moveSpeed = 100;
     int widthLimit;
-    FlyingEnemy(Track track, FE_SPRITE fes){
-        super(track);
+    FlyingEnemy(int widthLimit, FE_SPRITE fes){
         this.image = new Image[1];
         image[0] = new Image(FlyingEnemy.class.getResourceAsStream(fes == FE_SPRITE.YELLOW ? "flying_enemy.png" : "flying_enemy2.png"));
         pos = new Point2D(0, 20);
-        widthLimit = (int)track.getSize().getWidth();
+        this.widthLimit = widthLimit;
     }
 
     @Override

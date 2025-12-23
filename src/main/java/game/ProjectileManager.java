@@ -11,51 +11,50 @@ public class ProjectileManager {
     private final List<Projectile> projectiles = new ArrayList<>();
     private final List<Projectile> toRemove = new ArrayList<>();
 
-    Track t;
+    private CollisionableManager collisionableManager;
 
     private int horizontalDelay = 500, verticalDelay = 200;
     private double lastHorizontal, lastVertical;
     private int verticalInitialYPos, horizontalXBounds;
-    public ProjectileManager(int GROUND_HEIGHT, Track t){
+    public ProjectileManager(Track t, int groundHeight, CollisionableManager collisionableManager){
         lastHorizontal = System.currentTimeMillis();
         lastVertical = System.currentTimeMillis();
-        verticalInitialYPos = (int)t.getSize().getHeight() - GROUND_HEIGHT - 32;
+        verticalInitialYPos = (int)t.getSize().getHeight() - groundHeight - 32;
         horizontalXBounds = (int)t.getSize().getWidth();
-        this.t = t;
+        this.collisionableManager = collisionableManager;
     }
     public void shootProjectiles(int shipX){
         if(System.currentTimeMillis() > lastVertical+verticalDelay){
             VerticalProjectile vp = new VerticalProjectile(new Point2D(shipX + 38, verticalInitialYPos));
-            projectiles.add(vp);
+            //projectiles.add(vp);
+            collisionableManager.addCollisionable(vp);
             lastVertical = System.currentTimeMillis();
-            t.addCollisionable(vp);
         }
         if(System.currentTimeMillis() > lastHorizontal+horizontalDelay){
-            HorizontalProjectile hp = new HorizontalProjectile(new Point2D(shipX + 80, verticalInitialYPos + 8), horizontalXBounds);
-            projectiles.add(hp);
+            HorizontalProjectile hp = new HorizontalProjectile(new Point2D(shipX + 80, verticalInitialYPos + 12), horizontalXBounds);
+            //projectiles.add(hp);
+            collisionableManager.addCollisionable(hp);
             lastHorizontal = System.currentTimeMillis();
-            t.addCollisionable(hp);
         }
     }
-    public void draw(GraphicsContext gc){
+    /*public void draw(GraphicsContext gc){
         for(Projectile p : projectiles){
             p.draw(gc);
         }
-    }
-    public void simulate() {
+    }*/
+    /*public void simulate(double deltaTime) {
         for (Projectile p : projectiles) {
-            p.move();
+            p.simulate(deltaTime);
         }
 
         for (Projectile p : projectiles) {
             if (p.isOutOfBounds()) {
                 toRemove.add(p);
-                t.removeCollisionable(p);
             }
         }
 
         projectiles.removeAll(toRemove);
 
         toRemove.clear();
-    }
+    }*/
 }

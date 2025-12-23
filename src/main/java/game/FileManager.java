@@ -5,22 +5,28 @@ import java.io.*;
 public class FileManager {
     private static final String FILE_PATH = "score.dat";  // or "data.ser"
     public static boolean save(Score s) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            System.out.println(s.checkScore() ? "New high score" : "Not new high score");
+        File file = new File(FILE_PATH);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(s);
-            oos.flush();
+            System.out.println("Saved successfully");
             return true;
-        }
-        catch(IOException e){
-            System.out.println("Couldn't create object output stream");
+        } catch (IOException e) {
+            System.err.println("Save failed: " + e.getMessage());
+            e.printStackTrace();  // ← This shows the real error!
             return false;
         }
     }
     public static Score load() {
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))){
-            return new Score((Score) ois.readObject());
+        File file = new File(FILE_PATH);
+        if (!file.exists()) {
+            System.out.println("No saved score found (first run)");
+            return null;
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (Score) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Could not load score");
+            System.out.println("Could not load score: " + e.getMessage());
             return null;
         }
     }

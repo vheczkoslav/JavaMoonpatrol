@@ -71,25 +71,14 @@ public class GameController {
         assert scoreText != null : "fx:id=\"scoreText\" was not injected: check your FXML file 'gameWindow.fxml'.";
         assert highScoreText != null : "fx:id=\"highScoreText\" was not injected: check your FXML file 'gameWindow.fxml'.";
 
-        /*root.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.windowProperty().addListener((obs2, oldWin, newWin) -> {
-                    if (newWin != null) {
-                        root.requestFocus();   // now it receives key events
-                    }
-                });
-            }
-        });*/
-
         s = FileManager.load();
 
         if(s == null){
             s = new Score();
         }
-        else{
-            scoreText.setText("Score: " + String.valueOf(s.currentScore));
-            highScoreText.setText("High score: " + String.valueOf(s.highScore));
-        }
+        setScoreText();
+        highScoreText.setText("High score: " + String.valueOf(s.highScore));
+
 
         track = new Track(canvas.getWidth(), canvas.getHeight(), s, this);
         timer = new DrawingThread(canvas, track);
@@ -103,7 +92,7 @@ public class GameController {
     }
 
     public void setScoreText(){
-        scoreText.setText(String.valueOf(s.currentScore));
+        scoreText.setText("Score: " + String.valueOf(s.currentScore));
     }
 
     public void stop() throws Exception {

@@ -25,7 +25,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            //Construct a main window with a canvas.
             FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("/game/application.fxml"));
             Parent root = gameLoader.load();
             gameController = gameLoader.getController();
@@ -35,7 +34,7 @@ public class App extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle("Java 1 - 6th laboratory");
             primaryStage.show();
-            //Exit program when main window is closed
+
             primaryStage.setOnCloseRequest(e -> {
                 if (!FileManager.save(gameController.getScore())) {
                     System.out.println("Score data wasn't successfully saved");

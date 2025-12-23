@@ -18,15 +18,12 @@ public class Ground {
     private short[] groundWaves;
 
     private Random rand = new Random();
-    private long nextTick;
 
-    private List<Stone> stones = new ArrayList<>();
     Track track;
-    Ground(Track track, final int HEIGHT){
-        r = new Rectangle(0, track.getSize().getHeight() - HEIGHT, track.getSize().getWidth(), HEIGHT);
+    Ground(Track track, Rectangle r){
+        this. r = r;
         groundWaves = new short[(int)track.getSize().getWidth()/3];
         Arrays.fill(groundWaves, (short) 0);
-        nextTick = System.currentTimeMillis() + rand.nextInt(5_000, 15_000);
         this.track = track;
     }
 
@@ -37,10 +34,6 @@ public class Ground {
             gc.fillRect(i * 3, (int)r.getY() - groundWaves[i], 3, groundWaves[i]);
         }
         gc.setFill(Color.BLACK);
-
-        for(Stone s : stones){
-            s.draw(gc);
-        }
     }
 
     public void simulate(double deltaTime){
@@ -52,18 +45,6 @@ public class Ground {
             groundWaves[i] = groundWaves[i + 1];
         }
 
-        for(Stone s : stones) s.move(deltaTime);
-
-        if(System.currentTimeMillis() > nextTick){
-            stones.add(new Stone(new STONE_SIZE[]{STONE_SIZE.SMALL, STONE_SIZE.MEDIUM, STONE_SIZE.LARGE}[rand.nextInt(3)], (int)r.getWidth(), (int)r.getY()));
-            nextTick = System.currentTimeMillis() + rand.nextInt(5_000, 15_000);
-            track.addCollisionable(stones.getLast());
-        }
-
         groundWaves[groundWaves.length - 1] = (short) (last * 3);
-
-        for(Stone s : stones){
-            if(s.isOutOfBounds()) track.removeCollisionable(s);
-        }
     }
 }

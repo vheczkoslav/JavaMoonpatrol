@@ -3,22 +3,21 @@ package game;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.*;
 
 public class Track {
     private Dimension2D size;
-    private Ground g;
-    private Ship s;
+    private Ground ground;
 
     private static final int GROUND_HEIGHT = 48;
     private Score score;
+    private Ship ship;
 
-    private FlyingEnemyGenerator feg;
-    private ProjectileManager projectileManager;
+    private CollisionableManager collisionableManager;
 
     private final List<RenderEntity> r = new ArrayList<>();
-    private final List<Collisionable> collisionables = new ArrayList<>();
 
     private GameController gameController;
 
@@ -26,15 +25,15 @@ public class Track {
         this.score = score;
 
         size = new Dimension2D(width, height);
-        g = new Ground(this, GROUND_HEIGHT);
-        s = new Ship(this, GROUND_HEIGHT);
+
+        Rectangle groundRect = new Rectangle(0, size.getHeight() - GROUND_HEIGHT, getSize().getWidth(), GROUND_HEIGHT);
+
+        ground = new Ground(this, groundRect);
         r.add(new BackgroundMountains(this, GROUND_HEIGHT));
         r.add(new FrontHills(this, GROUND_HEIGHT));
-        r.add(s);
 
-        feg = new FlyingEnemyGenerator(this);
-        projectileManager = new ProjectileManager(GROUND_HEIGHT, this);
-        collisionables.add(s);
+        collisionableManager = new CollisionableManager(this, GROUND_HEIGHT, score, groundRect, gameController);
+        ship = collisionableManager.getShip();
 
         this.gameController = gameController;
     }
@@ -42,44 +41,15 @@ public class Track {
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.BLACK);
         gc.fillRect(0,0,size.getWidth(),size.getHeight());
-//        for(Renderable renderable : r){
-//            renderable.draw(gc);
-//        }
         r.forEach(e -> e.draw(gc));
-        g.draw(gc);
-        feg.draw(gc);
-        projectileManager.draw(gc);
+        collisionableManager.draw(gc);
+        ground.draw(gc);
     }
 
     public void simulate(double deltaTime) {
-        for (Collisionable c1 : collisionables) {
-            for (Collisionable c2 : collisionables) {
-                if (c1 != c2 && c1.getBoundingBox().intersects(c2.getBoundingBox())) {
-                    if (c1 instanceof Ship && c2 instanceof Stone) {
-                        System.exit(-1);
-                    }
-                    if (c1 instanceof HorizontalProjectile && c2 instanceof Stone) {
-                        score.increaseScore(50);
-                        collisionables.remove(c2);
-                        gameController.setScoreText();
-                    }
-                    if(c1 instanceof VerticalProjectile && c2 instanceof FlyingEnemy){
-                        score.increaseScore(100);
-                        collisionables.remove(c2);
-                        gameController.setScoreText();
-                    }
-                }
-            }
-        }
-
-        g.simulate(deltaTime);
-//        for(Renderable renderable : r){
-//            renderable.simulate(deltaTime);
-//        }
+        ground.simulate(deltaTime);
         r.forEach(e -> e.simulate(deltaTime));
-        s.move();
-        feg.simulate(deltaTime);
-        projectileManager.simulate();
+        collisionableManager.simulate(deltaTime);
     }
 
     public Dimension2D getSize(){
@@ -87,18 +57,10 @@ public class Track {
     }
 
     public Ship getS() {
-        return s;
+        return ship;
     }
 
     public void shoot(){
-        if(!s.isDidJump()) projectileManager.shootProjectiles((int)getS().pos.getX());
-    }
-
-    public void addCollisionable(Collisionable c){
-        this.collisionables.add(c);
-    }
-
-    public void removeCollisionable(Collisionable c){
-        this.collisionables.remove(c);
+        if(!ship.isDidJump()) collisionableManager.shootProjectiles();
     }
 }

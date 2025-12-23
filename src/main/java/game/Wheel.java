@@ -9,14 +9,15 @@ import javax.swing.text.Position;
 public class Wheel extends RenderEntity {
     private String[] imgSources = new String[]{"wheel1.png", "wheel2.png"};
     private boolean currentImage = false;
-    private int yoffset = 0, defaultY;
+    private int yoffset = 0;
+    private final int defaultY;
     private double deltaCheck = 0;
     double SHIP_X_OFFSET;
     Wheel(Track track, int GROUND_HEIGHT, int SHIP_X_OFFSET){
         super(track);
         image = new Image[2];
-        image[0] = new Image(FrontHills.class.getResourceAsStream(imgSources[0]));
-        image[1] = new Image(FrontHills.class.getResourceAsStream(imgSources[1]));
+        image[0] = new Image(Wheel.class.getResourceAsStream(imgSources[0]));
+        image[1] = new Image(Wheel.class.getResourceAsStream(imgSources[1]));
         defaultY = (int)((track.getSize().getHeight() - GROUND_HEIGHT) - image[0].getHeight() - yoffset);
         pos = new Point2D(SHIP_X_OFFSET, (track.getSize().getHeight() - GROUND_HEIGHT) - image[0].getHeight() - yoffset);
         this.SHIP_X_OFFSET = SHIP_X_OFFSET;
@@ -32,7 +33,7 @@ public class Wheel extends RenderEntity {
 
     public void simulate(double deltaTime, double jumpHeight) {
         simulate(deltaTime);
-        pos = new Point2D(pos.getX(), defaultY - jumpHeight);
+        pos = new Point2D(pos.getX(), defaultY - jumpHeight - 8);
     }
 
     public void draw(GraphicsContext gc) {
@@ -41,5 +42,9 @@ public class Wheel extends RenderEntity {
 
     public void move(boolean leftOrRight){
         this.pos = new Point2D(pos.getX() + (leftOrRight ? 5 : -5), pos.getY());
+    }
+
+    public void reset(){
+        this.pos = new Point2D(pos.getX(), defaultY);
     }
 }

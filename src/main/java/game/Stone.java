@@ -8,7 +8,7 @@ import javafx.geometry.Point2D;
 
 import java.awt.*;
 
-public class Stone implements Collisionable{
+public class Stone extends Collisionable{
     Image i;
     Point2D pos;
     public Stone(STONE_SIZE stoneSize, int trackWidth, int groundHeight){
@@ -23,7 +23,7 @@ public class Stone implements Collisionable{
     public void draw(GraphicsContext gc){
         gc.drawImage(i, pos.getX(), pos.getY());
     }
-    public void move(double deltaTime){
+    public void simulate(double deltaTime){
         pos = new Point2D(pos.getX() - 250 * deltaTime, pos.getY());
     }
     public boolean isOutOfBounds(){

@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ship extends RenderEntity implements Collisionable {
+public class Ship extends Collisionable {
     private List<Wheel> wheels = new ArrayList<>();
 
     private boolean leftMove = false, rightMove = false, didJump = false;
@@ -61,14 +61,14 @@ public class Ship extends RenderEntity implements Collisionable {
                 height = Math.sin(normalizedTime * Math.PI) * JUMP_HEIGHT;
                 pos = new Point2D(pos.getX(), defaultY - height);
                 jumpTimer += deltaTime;
+                for(Wheel wheel : wheels){
+                    wheel.simulate(deltaTime, height);
+                }
             }
             else{
-                height = 0;
                 pos = new Point2D(pos.getX(), defaultY);
                 didJump = false;
-            }
-            for(Wheel wheel : wheels){
-                wheel.simulate(deltaTime, height);
+                for(Wheel wheel : wheels) wheel.reset();
             }
         }
     }
@@ -88,7 +88,7 @@ public class Ship extends RenderEntity implements Collisionable {
                 w.move(false);
             }
         }
-        if(rightMove && pos.getX() < t.getSize().getWidth() / 2.5){
+        if(rightMove && pos.getX() < track.getSize().getWidth() / 2.5){
             pos = new Point2D(pos.getX() + 5, pos.getY());
             for(Wheel w: wheels){
                 w.move(true);
