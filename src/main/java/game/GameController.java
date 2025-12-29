@@ -1,7 +1,6 @@
 package game;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
@@ -9,10 +8,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
+
 public class GameController {
     private DrawingThread timer;
     private Track track;
     private Score s;
+    private App app;
 
     @FXML
     private Text highScoreText;
@@ -36,13 +38,13 @@ public class GameController {
     public void keyPressed(KeyEvent event) {
         switch (event.getCode()) {
             case KeyCode.A:
-                track.getS().setLeftMove(true);
+                track.getShip().setLeftMove(true);
                 break;
             case KeyCode.D:
-                track.getS().setRightMove(true);
+                track.getShip().setRightMove(true);
                 break;
             case KeyCode.W:
-                track.getS().setJumpMove(true);
+                track.getShip().setJumpMove(true);
                 break;
             case KeyCode.SPACE:
                 track.shoot();
@@ -54,10 +56,10 @@ public class GameController {
     public void keyReleased(KeyEvent event) {
         switch (event.getCode()) {
             case KeyCode.A:
-                track.getS().setLeftMove(false);
+                track.getShip().setLeftMove(false);
                 break;
             case KeyCode.D:
-                track.getS().setRightMove(false);
+                track.getShip().setRightMove(false);
                 break;
         }
     }
@@ -71,7 +73,7 @@ public class GameController {
         assert scoreText != null : "fx:id=\"scoreText\" was not injected: check your FXML file 'gameWindow.fxml'.";
         assert highScoreText != null : "fx:id=\"highScoreText\" was not injected: check your FXML file 'gameWindow.fxml'.";
 
-        s = FileManager.load();
+        s = new FileManager().load();
 
         if(s == null){
             s = new Score();
@@ -93,6 +95,14 @@ public class GameController {
 
     public void setScoreText(){
         scoreText.setText("Score: " + String.valueOf(s.currentScore));
+    }
+
+    public void switchToMenu() throws IOException {
+        app.switchToMenu();
+    }
+
+    public void setApp(App app){
+        this.app = app;
     }
 
     public void stop() throws Exception {

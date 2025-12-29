@@ -103,4 +103,9 @@ public class Ship extends Collisionable {
     public Rectangle2D getBoundingBox(){
         return new Rectangle2D(pos.getX(), pos.getY(), image[0].getWidth(), image[0].getHeight());
     }
+
+    @Override
+    public boolean isOutOfBounds() {
+        return false;
+    }
 }

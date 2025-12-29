@@ -27,11 +27,8 @@ public class FlyingEnemy extends Collisionable {
         pos = pos.add(moveSpeed * deltaTime, 0);
     }
 
-    public boolean checkBounds(){
-        if(pos.getX() > widthLimit || pos.getX() < -image[0].getWidth()){
-            return true;
-        }
-        return false;
+    public boolean isOutOfBounds(){
+        return pos.getX() > widthLimit;
     }
 
     @Override

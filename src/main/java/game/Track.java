@@ -12,18 +12,13 @@ public class Track {
     private Ground ground;
 
     private static final int GROUND_HEIGHT = 48;
-    private Score score;
     private Ship ship;
 
     private CollisionableManager collisionableManager;
 
     private final List<RenderEntity> r = new ArrayList<>();
 
-    private GameController gameController;
-
     public Track(double width, double height, Score score, GameController gameController) {
-        this.score = score;
-
         size = new Dimension2D(width, height);
 
         Rectangle groundRect = new Rectangle(0, size.getHeight() - GROUND_HEIGHT, getSize().getWidth(), GROUND_HEIGHT);
@@ -34,8 +29,6 @@ public class Track {
 
         collisionableManager = new CollisionableManager(this, GROUND_HEIGHT, score, groundRect, gameController);
         ship = collisionableManager.getShip();
-
-        this.gameController = gameController;
     }
 
     public void draw(GraphicsContext gc) {
@@ -56,7 +49,7 @@ public class Track {
         return size;
     }
 
-    public Ship getS() {
+    public Ship getShip() {
         return ship;
     }
 

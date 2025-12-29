@@ -3,6 +3,7 @@ package game;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,7 +42,11 @@ public class CollisionableManager {
                 Collisionable c2 = collisionableList.get(j);
                 if (c1 != c2 && c1.getBoundingBox().intersects(c2.getBoundingBox())) {
                     if (c1 instanceof Ship && c2 instanceof Stone) {
-                        System.out.println("Konec");
+                        try {
+                            gameController.switchToMenu();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     if (c1 instanceof HorizontalProjectile && c2 instanceof Stone) {
                         score.increaseScore(50);
@@ -58,28 +63,25 @@ public class CollisionableManager {
         }
     }
     public void draw(GraphicsContext gc){
-        //flyingEnemyGenerator.draw(gc);
         for(Collisionable c: collisionableList){
             c.draw(gc);
         }
-        //projectileManager.draw(gc);
     }
     public void simulate(double deltaTime){
-        flyingEnemyGenerator.simulate(deltaTime);
+        flyingEnemyGenerator.simulate();
         ship.move();
         for(Collisionable c: collisionableList){
             c.simulate(deltaTime);
         }
-        //projectileManager.simulate(deltaTime);
 
         if(System.currentTimeMillis() > nextStone){
             collisionableList.add(new Stone(new STONE_SIZE[]{STONE_SIZE.SMALL, STONE_SIZE.MEDIUM, STONE_SIZE.LARGE}[random.nextInt(3)], (int) groundRect.getWidth(), (int) groundRect.getY()));
             nextStone = System.currentTimeMillis() + random.nextInt(5_000, 15_000);
         }
 
-        for(Collisionable collisionable: collisionableList){
-            if(collisionable instanceof Stone){
-                if(((Stone) collisionable).isOutOfBounds()) collisionableList.remove(collisionable);
+        for (Collisionable collisionable : collisionableList) {
+            if (collisionable.isOutOfBounds()) {
+                toRemove.add(collisionable);
             }
         }
         checkCollisions();
@@ -87,6 +89,7 @@ public class CollisionableManager {
         collisionableList.removeAll(toRemove);
         toRemove.clear();
     }
+
     public void shootProjectiles(){
         projectileManager.shootProjectiles((int)ship.pos.getX());
     }

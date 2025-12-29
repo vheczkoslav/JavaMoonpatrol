@@ -12,6 +12,5 @@ public abstract class Projectile extends Collisionable {
         this.pos = pos;
     }
     public abstract void draw(GraphicsContext gc);
-    public abstract boolean isOutOfBounds();
     public abstract Rectangle2D getBoundingBox();
 }

@@ -13,4 +13,5 @@ public abstract class Collisionable implements Renderable {
         this.track = track;
     }
     Collisionable(){};
+    public abstract boolean isOutOfBounds();
 }

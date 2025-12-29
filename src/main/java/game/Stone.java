@@ -30,6 +30,6 @@ public class Stone extends Collisionable{
         return (pos.getX() < -i.getWidth());
     }
     public Rectangle2D getBoundingBox(){
-        return new Rectangle2D(pos.getX(), pos.getY(), i.getWidth(), i.getHeight());
+        return new Rectangle2D(pos.getX(), pos.getY(), i.getWidth(), i.getHeight() - 2);
     }
 }
