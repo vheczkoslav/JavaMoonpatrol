@@ -59,6 +59,7 @@ public class App extends Application {
         FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("application.fxml"));
         Parent root = gameLoader.load();
         GameController gameController = gameLoader.getController();
+        gameController.init();
         gameController.setApp(this);
         Scene scene = new Scene(root);
         URL cssUrl = getClass().getResource("application.css");
@@ -68,7 +69,16 @@ public class App extends Application {
     }
 
     public void switchToMenu() throws IOException {
-        // Construct a main window with a canvas.
+        if (gameController != null) {
+            try {
+                gameController.stop();  // Stop timer and any threads
+                (new FileManager()).save(gameController.getScore());
+            } catch (Exception e) {
+                System.out.println("Error during cleanup/save: " + e.getMessage());
+            } finally {
+                gameController = null;  // Release reference
+            }
+        }
         state = false;
         FXMLLoader menuLoader = new FXMLLoader(getClass().getResource("menu.fxml"));
         Parent root = menuLoader.load();
@@ -78,7 +88,6 @@ public class App extends Application {
         URL cssUrl = getClass().getResource("application.css");
         scene.getStylesheets().add(cssUrl.toString());
         primaryStage.setScene(scene);
-        if(gameController != null) gameController = null;
     }
 
     @Override

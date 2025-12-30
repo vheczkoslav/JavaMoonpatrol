@@ -41,7 +41,7 @@ public class Wheel extends RenderEntity {
     }
 
     public void move(boolean leftOrRight){
-        this.pos = new Point2D(pos.getX() + (leftOrRight ? 5 : -5), pos.getY());
+        this.pos = new Point2D(pos.getX() + (leftOrRight ? 10 : -7.5), pos.getY());
     }
 
     public void reset(){

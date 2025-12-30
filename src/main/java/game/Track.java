@@ -11,23 +11,23 @@ public class Track {
     private Dimension2D size;
     private Ground ground;
 
-    private static final int GROUND_HEIGHT = 48;
     private Ship ship;
 
     private CollisionableManager collisionableManager;
+    public final static int groundHeight = 48;
 
     private final List<RenderEntity> r = new ArrayList<>();
 
     public Track(double width, double height, Score score, GameController gameController) {
         size = new Dimension2D(width, height);
 
-        Rectangle groundRect = new Rectangle(0, size.getHeight() - GROUND_HEIGHT, getSize().getWidth(), GROUND_HEIGHT);
+        Rectangle groundRect = new Rectangle(0, size.getHeight() - groundHeight, getSize().getWidth(), groundHeight);
 
         ground = new Ground(this, groundRect);
-        r.add(new BackgroundMountains(this, GROUND_HEIGHT));
-        r.add(new FrontHills(this, GROUND_HEIGHT));
+        r.add(new BackgroundMountains(this, groundHeight));
+        r.add(new FrontHills(this, groundHeight));
 
-        collisionableManager = new CollisionableManager(this, GROUND_HEIGHT, score, groundRect, gameController);
+        collisionableManager = new CollisionableManager(this, score, groundRect, gameController);
         ship = collisionableManager.getShip();
     }
 
@@ -55,5 +55,9 @@ public class Track {
 
     public void shoot(){
         if(!ship.isDidJump()) collisionableManager.shootProjectiles();
+    }
+
+    public void cleanup() {
+        collisionableManager.clear();
     }
 }

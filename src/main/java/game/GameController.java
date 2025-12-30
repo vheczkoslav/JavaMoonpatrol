@@ -65,7 +65,9 @@ public class GameController {
     }
 
     @FXML
-    void initialize() {
+    void initialize() {}
+
+    void init(){
         root.setFocusTraversable(true);
 
         assert canvas != null : "fx:id=\"canvas\" was not injected: check your FXML file 'gameWindow.fxml'.";
@@ -80,7 +82,6 @@ public class GameController {
         }
         setScoreText();
         highScoreText.setText("High score: " + String.valueOf(s.highScore));
-
 
         track = new Track(canvas.getWidth(), canvas.getHeight(), s, this);
         timer = new DrawingThread(canvas, track);
@@ -106,6 +107,13 @@ public class GameController {
     }
 
     public void stop() throws Exception {
-        timer.stop();
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+        if (track != null) {
+            track.cleanup();
+            track = null;
+        }
     }
 }

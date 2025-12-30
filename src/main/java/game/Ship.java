@@ -14,6 +14,7 @@ public class Ship extends Collisionable {
     private boolean leftMove = false, rightMove = false, didJump = false;
     private int defaultY;
     private final int JUMP_HEIGHT = 80, JUMP_DURATION = 1;
+    private final int moveSpeed = 10;
     private double jumpTimer;
 
     public void setLeftMove(boolean t){
@@ -83,13 +84,13 @@ public class Ship extends Collisionable {
 
     public void move(){
         if(leftMove && pos.getX() > 0){
-            pos = new Point2D(pos.getX() - 5, pos.getY());
+            pos = new Point2D(pos.getX() - moveSpeed * 0.75, pos.getY());
             for(Wheel w: wheels){
                 w.move(false);
             }
         }
-        if(rightMove && pos.getX() < track.getSize().getWidth() / 2.5){
-            pos = new Point2D(pos.getX() + 5, pos.getY());
+        if(rightMove && pos.getX() < track.getSize().getWidth() / 1.5){
+            pos = new Point2D(pos.getX() + moveSpeed, pos.getY());
             for(Wheel w: wheels){
                 w.move(true);
             }
