@@ -11,6 +11,7 @@ import java.util.Random;
 public class CollisionableManager {
     List<Collisionable> collisionableList = new ArrayList<>();
     List<Collisionable> toRemove = new ArrayList<>();
+    List<Collisionable> toAdd = new ArrayList<>();
 
     private GameController gameController;
 
@@ -35,27 +36,31 @@ public class CollisionableManager {
         nextStone = System.currentTimeMillis() + random.nextInt(5_000, 15_000);
         this.gameController = gameController;
     }
-    public void checkCollisions(){
+
+    public void checkCollisions() {
         for (int i = 0; i < collisionableList.size() - 1; i++) {
             for (int j = i + 1; j < collisionableList.size(); j++) {
                 Collisionable c1 = collisionableList.get(i);
                 Collisionable c2 = collisionableList.get(j);
                 if (c1 != c2 && c1.getBoundingBox().intersects(c2.getBoundingBox())) {
-                    if ((c1 instanceof Ship && c2 instanceof Stone) || (c1 instanceof Ship && c2 instanceof  FlyingEnemyProjectile)) {
+                    if ((c1 instanceof Ship && (c2 instanceof Stone || c2 instanceof FlyingEnemyProjectile))
+                    || (c2 instanceof Ship && (c1 instanceof Stone || c1 instanceof  FlyingEnemyProjectile))) {
                         try {
                             gameController.switchToMenu();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                    if (c1 instanceof HorizontalProjectile && c2 instanceof Stone) {
+                    if ((c1 instanceof HorizontalProjectile && c2 instanceof Stone)
+                    || (c2 instanceof HorizontalProjectile && c1 instanceof Stone)) {
                         score.increaseScore(50);
-                        toRemove.add(c2);
+                        toRemove.add(c1 instanceof Stone ? c1 : c2);
                         gameController.setScoreText();
                     }
-                    if (c1 instanceof VerticalProjectile && c2 instanceof FlyingEnemy) {
+                    if ((c1 instanceof VerticalProjectile && c2 instanceof FlyingEnemy)
+                    || (c2 instanceof VerticalProjectile && c1 instanceof FlyingEnemy)) {
                         score.increaseScore(100);
-                        toRemove.add(c2);
+                        toRemove.add(c1 instanceof FlyingEnemy ? c1 : c2);
                         gameController.setScoreText();
                     }
                 }
@@ -68,6 +73,9 @@ public class CollisionableManager {
         }
     }
     public void simulate(double deltaTime){
+        collisionableList.addAll(toAdd);
+        toAdd.clear();
+
         flyingEnemyGenerator.simulate();
         ship.move();
         for(Collisionable c: collisionableList){
@@ -97,7 +105,7 @@ public class CollisionableManager {
     public Ship getShip(){return ship;}
 
     public void addCollisionable(Collisionable c){
-        collisionableList.add(c);
+        toAdd.add(c);
     }
 
     public void clear() {
