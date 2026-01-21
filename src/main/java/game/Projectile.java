@@ -7,7 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 public abstract class Projectile extends Collisionable {
     protected Point2D pos;
     protected int delay; // delay between shots
-    protected final int speed = 5;
+    protected final int speed = 225;
     Projectile(Point2D pos){
         this.pos = pos;
     }

@@ -18,7 +18,7 @@ public class VerticalProjectile extends Projectile{
 
     @Override
     public void simulate(double deltaTime) {
-        pos = new Point2D(pos.getX(), pos.getY() - speed);
+        pos = new Point2D(pos.getX(), pos.getY() - speed * deltaTime);
     }
 
     @Override

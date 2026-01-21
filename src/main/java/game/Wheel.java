@@ -13,7 +13,8 @@ public class Wheel extends RenderEntity {
     private final int defaultY;
     private double deltaCheck = 0;
     double SHIP_X_OFFSET;
-    Wheel(Track track, int GROUND_HEIGHT, int SHIP_X_OFFSET){
+    private final int moveSpeed;
+    Wheel(Track track, int GROUND_HEIGHT, int SHIP_X_OFFSET, int moveSpeed){
         super(track);
         image = new Image[2];
         image[0] = new Image(Wheel.class.getResourceAsStream(imgSources[0]));
@@ -21,6 +22,7 @@ public class Wheel extends RenderEntity {
         defaultY = (int)((track.getSize().getHeight() - GROUND_HEIGHT) - image[0].getHeight() - yoffset);
         pos = new Point2D(SHIP_X_OFFSET, (track.getSize().getHeight() - GROUND_HEIGHT) - image[0].getHeight() - yoffset);
         this.SHIP_X_OFFSET = SHIP_X_OFFSET;
+        this.moveSpeed = moveSpeed;
     }
 
     public void simulate(double deltaTime) {
@@ -40,8 +42,8 @@ public class Wheel extends RenderEntity {
         gc.drawImage(image[currentImage ? 0 : 1], pos.getX(), pos.getY());
     }
 
-    public void move(boolean leftOrRight){
-        this.pos = new Point2D(pos.getX() + (leftOrRight ? 10 : -7.5), pos.getY());
+    public void move(boolean leftOrRight, double deltaTime){
+        this.pos = new Point2D(pos.getX() + (leftOrRight ? moveSpeed * deltaTime : -moveSpeed * deltaTime * 0.75), pos.getY());
     }
 
     public void reset(){

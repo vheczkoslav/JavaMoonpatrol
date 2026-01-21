@@ -1,5 +1,6 @@
 package game;
 
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
@@ -23,8 +24,8 @@ public class CollisionableManager {
     private double nextStone;
     private Random random = new Random();
 
-    Score score;
-    Rectangle groundRect;
+    private Score score;
+    private Rectangle groundRect;
 
     CollisionableManager(Track track, Score score, Rectangle groundRect, GameController gameController){
         flyingEnemyGenerator = new FlyingEnemyGenerator(this, (int)track.getSize().getWidth(), track);
@@ -63,6 +64,13 @@ public class CollisionableManager {
                         toRemove.add(c1 instanceof FlyingEnemy ? c1 : c2);
                         gameController.setScoreText();
                     }
+                    if((c1 instanceof Ship && c2 instanceof Crater) || (c2 instanceof Ship && c1 instanceof Crater)){
+                        try {
+                            gameController.switchToMenu();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
             }
         }
@@ -77,7 +85,7 @@ public class CollisionableManager {
         toAdd.clear();
 
         flyingEnemyGenerator.simulate();
-        ship.move();
+        ship.move(deltaTime);
         for(Collisionable c: collisionableList){
             c.simulate(deltaTime);
         }
@@ -89,6 +97,10 @@ public class CollisionableManager {
 
         for (Collisionable collisionable : collisionableList) {
             if (collisionable.isOutOfBounds()) {
+                if(collisionable instanceof FlyingEnemyProjectile){
+                    int x = (int)collisionable.getBoundingBox().getMinX();
+                    addCollisionable(new Crater(new Point2D(x - 6, groundRect.getY() - 9)));
+                }
                 toRemove.add(collisionable);
             }
         }

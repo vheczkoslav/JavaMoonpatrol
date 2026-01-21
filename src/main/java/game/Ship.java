@@ -14,7 +14,7 @@ public class Ship extends Collisionable {
     private boolean leftMove = false, rightMove = false, didJump = false;
     private int defaultY;
     private final int JUMP_HEIGHT = 80, JUMP_DURATION = 1;
-    private final int moveSpeed = 10;
+    private final int moveSpeed = 300; // in pixels per sec
     private double jumpTimer;
 
     public void setLeftMove(boolean t){
@@ -44,7 +44,7 @@ public class Ship extends Collisionable {
         pos = new Point2D(0, defaultY);
         final short WHEEL_COUNT = 3;
         for(int i = 0; i < WHEEL_COUNT; i++){
-            wheels.add(new Wheel(track, GROUND_HEIGHT, (int)pos.getX() + 5 + (i * 25)));
+            wheels.add(new Wheel(track, GROUND_HEIGHT, (int)pos.getX() + 5 + (i * 25), moveSpeed));
         }
     }
 
@@ -82,17 +82,17 @@ public class Ship extends Collisionable {
         }
     }
 
-    public void move(){
+    public void move(double deltaTime){
         if(leftMove && pos.getX() > 0){
-            pos = new Point2D(pos.getX() - moveSpeed * 0.75, pos.getY());
+            pos = new Point2D(pos.getX() - moveSpeed * 0.75 * deltaTime, pos.getY());
             for(Wheel w: wheels){
-                w.move(false);
+                w.move(false, deltaTime);
             }
         }
         if(rightMove && pos.getX() < track.getSize().getWidth() / 1.5){
-            pos = new Point2D(pos.getX() + moveSpeed, pos.getY());
+            pos = new Point2D(pos.getX() + moveSpeed * deltaTime, pos.getY());
             for(Wheel w: wheels){
-                w.move(true);
+                w.move(true, deltaTime);
             }
         }
     }

@@ -35,13 +35,13 @@ public class Track {
         gc.setFill(Color.BLACK);
         gc.fillRect(0,0,size.getWidth(),size.getHeight());
         r.forEach(e -> e.draw(gc));
-        collisionableManager.draw(gc);
         ground.draw(gc);
+        collisionableManager.draw(gc);
     }
 
     public void simulate(double deltaTime) {
-        ground.simulate(deltaTime);
         r.forEach(e -> e.simulate(deltaTime));
+        ground.simulate(deltaTime);
         collisionableManager.simulate(deltaTime);
     }
 

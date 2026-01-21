@@ -18,7 +18,7 @@ public class HorizontalProjectile extends Projectile{
 
     @Override
     public void simulate(double deltaTime) {
-        pos = new Point2D(pos.getX() + speed, pos.getY());
+        pos = new Point2D(pos.getX() + speed * deltaTime, pos.getY());
     }
 
     public void draw(GraphicsContext gc){

@@ -20,7 +20,7 @@ public class FlyingEnemy extends Collisionable {
         pos = new Point2D(0, 20);
         this.widthLimit = widthLimit;
         this.heightLimit = heightLimit;
-        nextProjectile = System.currentTimeMillis() + random.nextInt(3000, 6000);
+        nextProjectile = System.currentTimeMillis() + random.nextInt(500, 3000);
         this.collisionableManager = collisionableManager;
     }
 
@@ -36,11 +36,10 @@ public class FlyingEnemy extends Collisionable {
             collisionableManager.addCollisionable(
                     new FlyingEnemyProjectile(
                             new Point2D(pos.getX() + image[0].getWidth(), pos.getY() + image[0].getHeight() + 1),
-                            (random.nextInt(0, 2) != 0),
-                            heightLimit
+                            heightLimit, widthLimit
                     )
             );
-            nextProjectile = System.currentTimeMillis() + random.nextInt(2000, 5000);
+            nextProjectile = System.currentTimeMillis() + random.nextInt(1000, 4000);
         }
     }
 
